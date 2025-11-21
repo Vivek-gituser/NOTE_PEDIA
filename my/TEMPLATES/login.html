@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Private Study — Login / Sign Up</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  *{
+    margin:0; padding:0; box-sizing:border-box; font-family:"Poppins",sans-serif;
+  }
+  body{
+    background:#0d0d0d;
+    color:#fff;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+  }
+
+  /* Background animation */
+  .bg{
+    position:absolute;
+    width:100%; height:100%;
+    background:radial-gradient(circle at 20% 20%, rgba(60,60,60,0.3), transparent 70%),
+              radial-gradient(circle at 80% 80%, rgba(50,50,50,0.3), transparent 70%);
+    animation: float 6s infinite alternate ease-in-out;
+    z-index:-1;
+  }
+  @keyframes float{
+    from{transform:translateY(-20px);} to{transform:translateY(20px);}  
+  }
+
+  .container{
+    width:400px;
+    background:#111;
+    padding:30px;
+    border-radius:20px;
+    box-shadow:0 0 20px rgba(255,255,255,0.1);
+    animation: slide 1s ease;
+  }
+
+  @keyframes slide{
+    from{opacity:0; transform:translateY(40px);} to{opacity:1; transform:translateY(0);}  
+  }
+
+  h2{
+    text-align:center;
+    margin-bottom:20px;
+    font-weight:600;
+  }
+
+  input, select{
+    width:100%;
+    padding:12px;
+    margin:10px 0;
+    border:none;
+    border-radius:8px;
+    background:#1a1a1a;
+    color:white;
+  }
+  input:focus, select:focus{
+    outline:2px solid #4b8bff;
+  }
+
+  /*
+    This new #signUpFields container makes
+    toggling the form much easier to manage.
+  */
+  #signUpFields {
+    /* Adding a transition for a smoother hide/show */
+    transition: all 0.5s ease-out;
+    max-height: 500px; /* Set to a value larger than its content */
+    overflow: hidden;
+  }
+
+  /*
+    This class will be added by JS to hide
+    the sign-up fields with a nice animation.
+  */
+  .container.login-mode #signUpFields {
+    max-height: 0;
+    opacity: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  .remember{
+    display:flex;
+    align-items:center;
+    margin:10px 0;
+    font-size:14px;
+    /* Make the whole label clickable */
+    cursor: pointer; 
+  }
+  .remember input{
+    width:auto;
+    margin-right:8px;
+  }
+
+  a{
+    width:100%;
+    padding:12px;
+    border:none;
+    font-size:16px;
+    border-radius:8px;
+    background:#4b8bff;
+    color:white;
+    margin-top:10px;
+    cursor:pointer;
+    transition:0.3s;
+  }
+  button:hover{
+    background:#326ad9;
+  }
+
+  .switch{
+    text-align:center;
+    margin-top:15px;
+    font-size:14px;
+  }
+  .switch span{
+    color:#4b8bff;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<div class="container" id="formBox">
+  
+  <h2 id="title">Sign Up</h2>
+
+  <form id="authForm">
+    
+    <div id="signUpFields">
+      <input type="text" id="name" placeholder="Full Name" />
+
+      <select id="university">
+        <option value="">Select University</option>
+        <option>AKTU</option>
+        <option>Delhi University</option>
+        <option>IPU</option>
+        <option>Other</option>
+      </select>
+
+      <select id="branch">
+        <option value="">Select Branch</option>
+        <option>CSE</option>
+        <option>AIML</option>
+        <option>ECE</option>
+        <option>Mechanical</option>
+      </select>
+
+      <select id="course">
+        <option value="">Select Course</option>
+        <option>B.Tech</option>
+        <option>BCA</option>
+        <option>MCA</option>
+      </select>
+    </div>
+
+    <input type="email" id="email" placeholder="Email" required />
+    <input type="password" id="password" placeholder="Password" required />
+
+    <label class="remember">
+      <input type="checkbox" id="remember" /> Remember me
+    </label>
+
+    <a type="submit" id="submitBtn" href="dashbord">Sign Up</a>
+
+  </form>
+
+  <div class="switch">
+    <span id="switchPrompt">Already have an account? </span>
+    <span id="switchBtn">Login</span>
+  </div>
+</div>
+
+<script>
+  // Wait for the DOM to be fully loaded before running script
+  document.addEventListener('DOMContentLoaded', () => {
+    
+    // Global state variable
+    let isLogin = false;
+
+    // Get all the elements we need to interact with
+    const formBox = document.getElementById('formBox');
+    const title = document.getElementById('title');
+    const authForm = document.getElementById('authForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const switchBtn = document.getElementById('switchBtn');
+    const switchPrompt = document.getElementById('switchPrompt');
+    
+    // No longer need to get every field, just the container
+    // This is much cleaner!
+    const signUpFields = document.getElementById('signUpFields');
+
+    // This function toggles the form state
+    function toggleForm(){
+      isLogin = !isLogin;
+
+      // Toggle a class on the container
+      // The CSS will handle the animation.
+      formBox.classList.toggle('login-mode', isLogin);
+      
+      if(isLogin){
+        // Change text for Login
+        title.innerText = "Login";
+        submitBtn.innerText = "Login";
+        switchPrompt.innerText = "Need an account? ";
+        switchBtn.innerText = "Sign Up";
+      } else {
+        // Change text for Sign Up
+        title.innerText = "Sign Up";
+        submitBtn.innerText = "Sign Up";
+        switchPrompt.innerText = "Already have an account? ";
+        switchBtn.innerText = "Login";
+      }
+    }
+
+    // This function handles the form submission
+    function submitForm(event){
+      // Prevent the form from reloading the page
+      event.preventDefault();
+      
+      // You would add your login/signup logic here
+      // (e.g., validate fields, send to a server)
+      
+      alert(isLogin ? "Logged in successfully!" : "Account created successfully!");
+      
+      // Optionally, you could reset the form
+      // authForm.reset(); 
+    }
+
+    // Attach event listeners
+    // This is the modern way, replacing onclick=""
+    switchBtn.addEventListener('click', toggleForm);
+    authForm.addEventListener('submit', submitForm);
+
+  });
+</script>
+</body>
+</html>
+

@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyHub - Free Notes for Indian College Students</title>
+    <style>
+        :root {
+            --bg-primary: #ffffff; --bg-secondary: #f5f7fa; --bg-accent: #eef2ff;
+            --bg-hero: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --text-primary: #1f2937; --text-secondary: #6b7280; --text-accent: #2563eb;
+            --text-on-hero: #ffffff; --border-color: #e5e7eb; --card-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        [data-theme="dark"] {
+            --bg-primary: #1f2937; --bg-secondary: #111827; --bg-accent: #374151;
+            --bg-hero: linear-gradient(135deg, #4f46e5 0%, #5b21b6 100%);
+            --text-primary: #f5f7fa; --text-secondary: #9ca3af; --text-accent: #60a5fa;
+            --border-color: #374151; --card-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: var(--bg-secondary); color: var(--text-primary); transition: 0.3s; }
+        a { text-decoration: none; color: inherit; }
+        
+        /* Header */
+        .header { background: var(--bg-primary); box-shadow: var(--card-shadow); position: sticky; top: 0; z-index: 100; padding: 15px 20px; }
+        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+        .logo { font-size: 24px; font-weight: bold; color: var(--text-accent); }
+        
+        .search-box { flex: 1; max-width: 500px; position: relative; }
+        .search-box input { width: 100%; padding: 10px 20px; border-radius: 25px; border: 2px solid var(--border-color); background: var(--bg-secondary); color: var(--text-primary); outline: none; }
+        
+        .nav-actions { display: flex; gap: 15px; align-items: center; }
+        .btn { padding: 8px 20px; border-radius: 20px; cursor: pointer; border: none; font-weight: 600; font-size: 14px; }
+        .btn-primary { background: var(--text-accent); color: #fff; }
+        .btn-secondary { border: 2px solid var(--text-accent); color: var(--text-accent); background: transparent; }
+        
+        .theme-btn { background: none; border: none; cursor: pointer; color: var(--text-secondary); font-size: 20px; }
+        
+        /* Hero */
+        .hero { background: var(--bg-hero); color: var(--text-on-hero); padding: 50px 20px; text-align: center; }
+        .hero h1 { font-size: 36px; margin-bottom: 10px; }
+        .stats { display: flex; justify-content: center; gap: 30px; margin-top: 20px; }
+        
+        /* Main Layout */
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; display: grid; grid-template-columns: 260px 1fr; gap: 30px; }
+        
+        /* Sidebar Styling */
+        .sidebar { background: var(--bg-primary); padding: 20px; border-radius: 12px; box-shadow: var(--card-shadow); height: fit-content; position: sticky; top: 80px; }
+        
+        /* Filter Group Styling */
+        .filter-group { margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; }
+        .filter-group:last-child { border-bottom: none; margin-bottom: 0; }
+
+        /* Toggle Header */
+        .filter-header { display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 5px 0; user-select: none; }
+        .filter-title { font-weight: 600; display: block; }
+        .toggle-icon { font-weight: bold; color: var(--text-accent); font-size: 18px; transition: transform 0.3s; }
+        
+        /* Filter Content Animation */
+        .filter-content { transition: max-height 0.3s ease-out; overflow: hidden; max-height: 500px; opacity: 1; } /* Open state */
+        .filter-content.collapsed { max-height: 0; opacity: 0; margin: 0; padding: 0; } /* Closed state */
+
+        /* Search & List */
+        .sidebar-search { width: 100%; padding: 8px 10px; margin: 10px 0; border: 1px solid var(--border-color); border-radius: 6px; background: var(--bg-secondary); color: var(--text-primary); font-size: 13px; outline: none; }
+        .filter-list { max-height: 250px; overflow-y: auto; }
+        .filter-option { display: block; padding: 8px; color: var(--text-secondary); border-radius: 6px; font-size: 14px; cursor: pointer; transition: 0.2s; }
+        .filter-option:hover, .filter-option.active { background: var(--bg-accent); color: var(--text-accent); }
+        .no-filter-match { display: none; font-size: 12px; color: var(--text-secondary); padding: 5px; font-style: italic; }
+
+        /* Resources Grid */
+        .resources-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .resource-card { background: var(--bg-primary); padding: 20px; border-radius: 12px; box-shadow: var(--card-shadow); border: 1px solid transparent; transition: 0.3s; }
+        .resource-card:hover { transform: translateY(-3px); border-color: var(--text-accent); }
+        
+        .resource-meta { display: flex; gap: 10px; margin: 5px 0 10px; font-size: 12px; color: var(--text-secondary); }
+        .badge { background: #10b981; color: white; padding: 2px 8px; border-radius: 10px; font-size: 10px; float: right; }
+        .btn-download { width: 100%; margin-top: 15px; padding: 8px; background: var(--bg-secondary); color: var(--text-accent); border: none; border-radius: 6px; cursor: pointer; font-weight: 600; }
+        .btn-download:hover { background: var(--text-accent); color: #fff; }
+        
+        /* Footer */
+        .footer { background: #1f2937; color: #d1d5db; padding: 40px 20px; margin-top: 50px; text-align: center; }
+        
+        /* Modals */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: 0.3s; z-index: 1000; }
+        .modal-overlay.open { opacity: 1; pointer-events: auto; }
+        .modal-box { background: var(--bg-primary); padding: 30px; border-radius: 12px; width: 90%; max-width: 400px; position: relative; }
+        .close-modal { position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-secondary); }
+        .form-group { margin-bottom: 15px; }
+        .form-group input { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; background: var(--bg-secondary); color: var(--text-primary); }
+        
+        /* Utilities */
+        .hidden { display: none !important; }
+        @media (max-width: 768px) { .container { grid-template-columns: 1fr; } .sidebar { display: none; } }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="nav-container">
+            <a href="#" class="logo">📚 StudyHub</a>
+            <div class="search-box">
+                <input type="search" id="global-search" placeholder="Search notes, papers, subjects...">
+            </div>
+            <div class="nav-actions">
+                <button class="theme-btn" id="theme-toggle">🌓</button>
+                <button class="btn btn-secondary" onclick="openModal('login-modal')">Login</button>
+                <button class="btn btn-primary" onclick="openModal('signup-modal')">Sign Up</button>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h1>Free Notes & Resources for Indian Students</h1>
+        <p>Download study materials, previous year papers, and mock tests - 100% Free!</p>
+        <div class="stats">
+            <div><strong>50M+</strong><br><small>Downloads</small></div>
+            <div><strong>500+</strong><br><small>Colleges</small></div>
+        </div>
+    </section>
+
+    <div class="container">
+        <aside class="sidebar">
+            
+            <div class="filter-group">
+                <div class="filter-header" onclick="toggleFilter('course-content', this)">
+                    <span class="filter-title">📖 Course</span>
+                    <span class="toggle-icon">−</span>
+                </div>
+                <div class="filter-content" id="course-content">
+                    <input type="text" class="sidebar-search" id="course-search-input" placeholder="Filter courses...">
+                    <div id="course-filters" class="filter-list">
+                        <a class="filter-option active" data-filter="all">All Courses</a>
+                        <a class="filter-option" data-filter="btech">B.Tech / B.E.</a>
+                        <a class="filter-option" data-filter="mba">MBA</a>
+                        <a class="filter-option" data-filter="bsc">B.Sc</a>
+                        <a class="filter-option" data-filter="bcom">B.Com</a>
+                        <a class="filter-option" data-filter="ba">B.A.</a>
+                        <div class="no-filter-match">No courses found</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <div class="filter-header" onclick="toggleFilter('uni-content', this)">
+                    <span class="filter-title">🏛️ University</span>
+                    <span class="toggle-icon">−</span>
+                </div>
+                <div class="filter-content" id="uni-content">
+                    <input type="text" class="sidebar-search" id="uni-search-input" placeholder="Filter universities...">
+                    <div id="uni-filters" class="filter-list">
+                        <a class="filter-option active" data-filter="all">All Universities</a>
+                        <a class="filter-option" data-filter="aktu">AKTU</a>
+                        <a class="filter-option" data-filter="du">Delhi University</a>
+                        <a class="filter-option" data-filter="mu">Mumbai University</a>
+                        <a class="filter-option" data-filter="au">Anna University</a>
+                        <a class="filter-option" data-filter="vtu">VTU</a>
+                        <a class="filter-option" data-filter="ipu">IPU</a>
+                        <div class="no-filter-match">No universities found</div>
+                    </div>
+                </div>
+            </div>
+
+        </aside>
+
+        <main>
+            <h2 style="margin-bottom: 20px;">Latest Resources</h2>
+            <div class="resources-grid" id="resources-grid">
+                
+                <div onclick="window.location.href='coa'"class="resource-card" data-category="btech" data-university="aktu">
+                    <span class="badge">FREE</span>
+                    <h3>Computer Organization</h3>
+                    <div class="resource-meta">
+                        <span>B.Tech CS</span> • <span>Sem 3</span> • <span>PDF</span>
+                    </div>
+                    <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 10px;">Complete notes covering CPU, Memory, and Pipeline architecture with diagrams.</p>
+                    
+                </div>
+
+                <div onclick="window.location.href='python'"class="resource-card" data-category="btech" data-university="aktu">
+                    <span class="badge">FREE</span>
+                    <h3>PYTHON</h3>
+                    <div class="resource-meta">
+                        <span>B.Tech</span> • <span>Sem 3</span> • <span>PDF</span>
+                    </div>
+                    <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 10px;">Previous year question papers (2018-2024) with detailed solutions.</p>
+                   
+                </div>
+
+                <div  onclick="window.location.href='dstl'"class="resource-card" data-category="mba" data-university="du">
+                    <span class="badge">FREE</span>
+                    <h3>DISCREETE STRUCTURE AND THEORY OF LOGIC</h3>
+                    <div class="resource-meta">
+                        <span>BTECH</span> • <span>SEM 3</span> • <span>PDF</span>
+                    </div>
+                    <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 10px;">Comprehensive notes on capital budgeting and ratio analysis.</p>
+                  
+                </div>
+
+                 <div onclick="window.location.href='maths'" class="resource-card" data-category="bsc" data-university="mu">
+                    <span class="badge">FREE</span>
+                    <h3>ENGINEERING MATHEMATICS</h3>
+                    <div class="resource-meta">
+                        <span>B.TECH</span> • <span>Sem 3</span> • <span>PDF</span>
+                    </div>
+                    <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 10px;">Handwritten notes on reactions and mechanisms.</p>
+                    
+                </div>
+                    <div onclick="window.location.href='dsa'" class="resource-card" data-category="bsc" data-university="mu">
+                    <span class="badge">FREE</span>
+                    <h3>DATA STRUCTURE </h3>
+                    <div class="resource-meta">
+                        <span>B.TECH</span> • <span>Sem 3</span> • <span>PDF</span>
+                    </div>
+                    <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 10px;">Handwritten notes on reactions and mechanisms.</p>
+                  
+                </div>
+                    <div onclick="window.location.href='digital_electronics'" class="resource-card" data-category="bsc" data-university="mu">
+                    <span class="badge">FREE</span>
+                    <h3>DIGITAL ELECTRONICS</h3>
+                    <div class="resource-meta">
+                        <span>B.TECH</span> • <span>Sem 3</span> • <span>PDF</span>
+                    </div>
+                    <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 10px;">Handwritten notes on reactions and mechanisms.</p>
+                    
+                </div> 
+
+
+                <div onclick="window.location.href='hv'" class="resource-card" data-category="bsc" data-university="mu">
+                    <span class="badge">FREE</span>
+                    <h3>HUMAN VALUES</h3>
+                    <div class="resource-meta">
+                        <span>B.TECH</span> • <span>Sem 3</span> • <span>PDF</span>
+                    </div>
+                    <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 10px;">Handwritten notes on reactions and mechanisms.</p>
+                    
+                </div>
+
+                <p id="no-results" class="hidden" style="grid-column: 1/-1; text-align: center; padding: 20px;">No resources found matching selection.</p>
+            </div>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <p>© 2025 StudyHub. Made with ❤️ for Indian students.</p>
+    </footer>
+
+    <div class="modal-overlay" id="login-modal">
+        <div class="modal-box">
+            <button class="close-modal" onclick="closeModal('login-modal')">&times;</button>
+            <h2 style="margin-bottom: 20px;">Login</h2>
+            <div class="form-group"><input type="email" placeholder="Email"></div>
+            <div class="form-group"><input type="password" placeholder="Password"></div>
+            <button class="btn btn-primary" style="width: 100%">Login</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="signup-modal">
+        <div class="modal-box">
+            <button class="close-modal" onclick="closeModal('signup-modal')">&times;</button>
+            <h2 style="margin-bottom: 20px;">Sign Up</h2>
+            <div class="form-group"><input type="text" placeholder="Full Name"></div>
+            <div class="form-group"><input type="email" placeholder="Email"></div>
+            <button class="btn btn-primary" style="width: 100%">Create Account</button>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. Theme Toggle ---
+        const themeBtn = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+        themeBtn.addEventListener('click', () => {
+            const newTheme = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', newTheme);
+        });
+
+        // --- 2. Modal Logic ---
+        function openModal(id) { document.getElementById(id).classList.add('open'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => { if(e.target === overlay) overlay.classList.remove('open'); });
+        });
+
+        // --- 3. Collapsible Sidebar Logic (Hide/Show) ---
+        function toggleFilter(contentId, headerElement) {
+            const content = document.getElementById(contentId);
+            const icon = headerElement.querySelector('.toggle-icon');
+            
+            content.classList.toggle('collapsed');
+            
+            // Update icon
+            if (content.classList.contains('collapsed')) {
+                icon.textContent = '+';
+            } else {
+                icon.textContent = '−';
+            }
+        }
+
+        // --- 4. Resource Filtering (Clicking Options) ---
+        const cards = document.querySelectorAll('.resource-card');
+        let currentCourse = 'all';
+        let currentUni = 'all';
+
+        function filterItems() {
+            let visibleCount = 0;
+            cards.forEach(card => {
+                const matchCourse = currentCourse === 'all' || card.dataset.category === currentCourse;
+                const matchUni = currentUni === 'all' || card.dataset.university === currentUni;
+                
+                if(matchCourse && matchUni) {
+                    card.classList.remove('hidden');
+                    visibleCount++;
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+            document.getElementById('no-results').classList.toggle('hidden', visibleCount > 0);
+        }
+
+        document.querySelectorAll('.filter-option').forEach(opt => {
+            opt.addEventListener('click', function() {
+                this.parentElement.querySelectorAll('.filter-option').forEach(el => el.classList.remove('active'));
+                this.classList.add('active');
+
+                const type = this.parentElement.id;
+                if(type === 'course-filters') currentCourse = this.dataset.filter;
+                if(type === 'uni-filters') currentUni = this.dataset.filter;
+
+                filterItems();
+            });
+        });
+
+        // --- 5. Sidebar Search Logic (Typing in Inputs) ---
+        function setupSidebarSearch(inputId, listId) {
+            const input = document.getElementById(inputId);
+            const list = document.getElementById(listId);
+            const items = list.getElementsByClassName('filter-option');
+            const noMatchMsg = list.querySelector('.no-filter-match');
+
+            input.addEventListener('input', function() {
+                const filter = this.value.toLowerCase();
+                let visibleCount = 0;
+
+                for (let item of items) {
+                    const text = item.textContent.toLowerCase();
+                    if (text.includes(filter)) {
+                        item.style.display = ""; 
+                        visibleCount++;
+                    } else {
+                        item.style.display = "none";
+                    }
+                }
+                
+                if(noMatchMsg) {
+                    noMatchMsg.style.display = visibleCount === 0 ? "block" : "none";
+                }
+            });
+        }
+
+        // Initialize Sidebar Search
+        setupSidebarSearch('course-search-input', 'course-filters');
+        setupSidebarSearch('uni-search-input', 'uni-filters');
+
+    </script>
+</body>
+</html>
+

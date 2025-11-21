@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login</title>
+  <style>
+    :root {
+      --bg: #0f172a;         /* slate-900 */
+      --card: #111827;       /* gray-900 */
+      --muted: #94a3b8;      /* slate-400 */
+      --text: #e5e7eb;       /* gray-200 */
+      --accent: #3b82f6;     /* blue-500 */
+      --accent-hover: #2563eb;
+      --danger: #ef4444;     /* red-500 */
+      --ring: rgba(59, 130, 246, 0.35);
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      background: radial-gradient(1200px 500px at 20% 10%, #1f2937 0%, var(--bg) 40%) no-repeat,
+                  radial-gradient(1000px 800px at 80% 80%, #0b1022 0%, var(--bg) 50%);
+      color: var(--text);
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+    .card {
+      width: 100%;
+      max-width: 380px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)) , var(--card);
+      border: 1px solid rgba(148,163,184,0.15);
+      border-radius: 16px;
+      padding: 26px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+      backdrop-filter: blur(6px);
+    }
+    .brand {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 18px;
+    }
+    .logo {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: conic-gradient(from 210deg, #60a5fa, #34d399, #f59e0b, #ef4444, #a78bfa, #60a5fa);
+      box-shadow: 0 6px 18px rgba(163, 163, 163, 0.15);
+    }
+    h1 {
+      margin: 0;
+      font-size: 1.25rem;
+      letter-spacing: 0.2px;
+    }
+    p.sub {
+      margin: 2px 0 18px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+    label {
+      display: block;
+      font-size: 0.9rem;
+      margin: 12px 0 6px;
+      color: var(--text);
+    }
+    .field {
+      position: relative;
+    }
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(148,163,184,0.25);
+      background: rgba(17,24,39,0.6);
+      color: var(--text);
+      outline: none;
+      transition: border 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+    input::placeholder { color: #94a3b8; }
+    input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px var(--ring);
+      background: rgba(17,24,39,0.7);
+    }
+    .toggle {
+      position: absolute;
+      right: 10px; top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.85rem;
+      color: var(--muted);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 6px 8px;
+    }
+    .row {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: 10px; margin-bottom: 16px;
+    }
+    .row .left {
+      display: flex; align-items: center; gap: 8px;
+      color: var(--muted); font-size: 0.9rem;
+    }
+    .link {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+    .link:hover { color: var(--accent-hover); }
+    .btn {
+      width: 100%;
+      padding: 12px 14px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+      transition: background 0.15s, transform 0.04s;
+    }
+    .btn:hover { background: var(--accent-hover); }
+    .btn:active { transform: translateY(1px); }
+    .error {
+      color: var(--danger);
+      font-size: 0.88rem;
+      margin-top: 10px;
+      min-height: 20px;
+    }
+    .footer {
+      margin-top: 18px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    .footer a { color: var(--accent); text-decoration: none; }
+    .footer a:hover { color: var(--accent-hover); }
+    @media (max-width: 420px){
+      .card { padding: 22px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="card" role="main" aria-labelledby="title">
+    <div class="brand">
+      <div class="logo" aria-hidden="true"></div>
+      <h1 id="title">Welcome back</h1>
+    </div>
+    <p class="sub">Sign in to your account</p>
+
+    <form id="loginForm" novalidate>
+      <label for="email">Email</label>
+      <div class="field">
+        <input id="email" name="email" type="email" placeholder="you@example.com" autocomplete="email" required />
+      </div>
+
+      <label for="password">Password</label>
+      <div class="field">
+        <input id="password" name="password" type="password" placeholder="••••••••" autocomplete="current-password" required minlength="6" />
+        <button type="button" class="toggle" aria-label="Show password" id="togglePwd">Show</button>
+      </div>
+
+      <div class="row">
+        <label class="left">
+          <input type="checkbox" id="remember" name="remember" />
+          Remember me
+        </label>
+        <a href="#" class="link">Forgot password?</a>
+      </div>
+
+      <button type="submit" class="btn">Sign in</button>
+      <div class="error" id="error" aria-live="polite"></div>
+    </form>
+
+    <div class="footer">
+      Don’t have an account? <a href="#">Create one</a>
+    </div>
+  </main>
+
+  <script>
+    const form = document.getElementById('loginForm');
+    const email = document.getElementById('email');
+    const password = document.getElementById('password');
+    const errorEl = document.getElementById('error');
+    const togglePwd = document.getElementById('togglePwd');
+
+    togglePwd.addEventListener('click', () => {
+      const isHidden = password.type === 'password';
+      password.type = isHidden ? 'text' : 'password';
+      togglePwd.textContent = isHidden ? 'Hide' : 'Show';
+      togglePwd.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+    });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      errorEl.textContent = '';
+
+      const emailVal = email.value.trim();
+      const pwdVal = password.value;
+
+      if (!emailVal) {
+        errorEl.textContent = 'Please enter your email.';
+        email.focus();
+        return;
+      }
+      // Simple email check
+      const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal);
+      if (!emailOk) {
+        errorEl.textContent = 'Enter a valid email address.';
+        email.focus();
+        return;
+      }
+      if (!pwdVal || pwdVal.length < 6) {
+        errorEl.textContent = 'Password must be at least 6 characters.';
+        password.focus();
+        return;
+      }
+
+      // Demo: replace with real API call
+      // fetch('/api/login', { method: 'POST', body: JSON.stringify({ email: emailVal, password: pwdVal }) })
+      //   .then(...)
+      alert('Logged in (demo). Replace with your backend call.');
+      form.reset();
+      togglePwd.textContent = 'Show';
+      password.type = 'password';
+    });
+  </script>
+</body>
+</html>

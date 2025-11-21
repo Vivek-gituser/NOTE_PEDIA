@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Study Resources</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #4a90e2;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+    .section {
+      padding: 40px 20px;
+    }
+    .section h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+    .resource-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    .resource-card {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 16px;
+      cursor: pointer;
+      transition: box-shadow 0.2s ease;
+    }
+    .resource-card:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .badge {
+      background: #4a90e2;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+    .resource-meta {
+      font-size: 14px;
+      color: #666;
+      margin-top: 8px;
+    }
+    p {
+      font-size: 14px;
+      color: #555;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>📘 Study Resources</h1>
+    <p>Organized sections for Notes, PYQ, DPP, and Questions</p>
+  </header>
+
+  <!-- Notes Section -->
+  <section class="section" id="notes">
+    <h2>Notes</h2>
+    <div class="resource-grid">
+      <div onclick="window.location.href='notes/?id=31'" class="resource-card">
+        <span class="badge">FREE</span>
+        <h3>COMPUTER ORGANISATION NOTES</h3>
+        <div class="resource-meta">
+          <span>B.tech</span> • <span>Sem 3</span> • <span>PDF</span>
+        </div>
+        <p>Handwritten notes covering logic gates and circuits.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PYQ Section -->
+  <section class="section" id="pyq">
+    <h2>Previous Year Questions (PYQ)</h2>
+    <div class="resource-grid">
+      <div onclick="window.location.href='PYQ/?id=31'" class="resource-card">
+        <span class="badge">FREE</span>
+        <h3>computer organisation PYQ</h3>
+        <div class="resource-meta">
+          <span>B.Tech</span> • <span>Sem 3</span> • <span>PDF</span>
+        </div>
+        <p>Collection of past exam questions with solutions.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- DPP Section -->
+  <section class="section" id="dpp">
+    <h2>Daily Practice Problems (DPP)</h2>
+    <div class="resource-grid">
+      <div onclick="window.location.href='dpp/?id=31'" class="resource-card">
+        <span class="badge">FREE</span>
+        <h3>computer organisation DPP</h3>
+        <div class="resource-meta">
+          <span>B.Sc</span> • <span>Sem 2</span> • <span>PDF</span>
+        </div>
+        <p>Daily practice problems to strengthen concepts.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Questions Section -->
+  <section class="section" id="questions">
+    <h2>Questions</h2>
+    <div class="resource-grid">
+      <div onclick="window.location.href='questions/?id=31'" class="resource-card">
+        <span class="badge">FREE</span>
+        <h3>computer organisation Questions</h3>
+        <div class="resource-meta">
+          <span>B.Tech</span> • <span>Sem 3</span> • <span>PDF</span>
+        </div>
+        <p>Practice questions with detailed explanations.</p>
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>
